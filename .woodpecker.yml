@@ -10,7 +10,7 @@ steps:
   - name: build
     image: plugins/kaniko
     settings:
-      repo: giosg/k8s-hello-world
+      repo: nginx
       tags:
         - latest
         - ${DRONE_COMMIT}
