@@ -10,9 +10,9 @@ steps:
   - name: build
     image: plugins/kaniko
     settings:
-      repo: nginx
+      repo: nginx:1.25.1
       tags:
-        - 1.25.2
+        - latest
         - ${DRONE_COMMIT}
       username:
         from_secret: docker-username
