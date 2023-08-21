@@ -12,7 +12,7 @@ steps:
     settings:
       repo: nginx
       tags:
-        - latest
+        - 1.25.2
         - ${DRONE_COMMIT}
       username:
         from_secret: docker-username
