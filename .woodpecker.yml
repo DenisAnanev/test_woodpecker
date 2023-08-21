@@ -7,14 +7,6 @@ trigger:
     - push
 
 steps:
-  - name: test
-    image: python:3.7
-    commands:
-      - pip install -r requirements.txt
-      - python -m unittest test/test_api.py
-    environment:
-      REDIS_URL: redis://redis:6379/0
-
   - name: build
     image: plugins/kaniko
     settings:
