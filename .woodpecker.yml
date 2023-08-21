@@ -45,18 +45,5 @@ steps:
       kubernetes_token:
         from_secret: k8s-token
       set_value_template:
-        - "secret.env.SECRET={{ SECRET_VALUE }}"
-        - "replicas=2"
-    environment:
-      SECRET_VALUE:
-        from_secret: SECRET_VALUE
-
-    when:
-      branch:
-        - master
-
-services:
-  - name: redis
-    image: redis
-    ports:
-      - 6379
+        - "replicas=1"
+  
