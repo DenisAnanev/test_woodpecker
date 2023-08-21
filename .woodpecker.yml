@@ -32,7 +32,6 @@ steps:
 
   - name: deploy
     image: giosg/drone-helm:test-v3
-    pull: always
     settings:
       chart: charts/hello-world
       namespace: default
