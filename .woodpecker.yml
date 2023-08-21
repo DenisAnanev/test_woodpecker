@@ -7,6 +7,14 @@ trigger:
     - push
 
 steps:
+  - name: test
+    image: python:3.7
+    commands:
+      - pip install -r requirements.txt
+      - python -m unittest test/test_api.py
+    environment:
+      REDIS_URL: redis://redis:6379/0
+
   - name: build
     image: plugins/kaniko
     settings:
@@ -18,18 +26,37 @@ steps:
         from_secret: docker-username
       password:
         from_secret: docker-password
+    when:
+      branch:
+        - master
 
-   - name: deploy
-      image: giosg/drone-helm:test-v3
-      pull: always
-      settings:
-        chart: charts/hello-world
-        namespace: default
-        release_name: example
-        values:
-          - imageTag=${DRONE_COMMIT}
-          - changecause=${DRONE_COMMIT}
-        api_server:
-          from_secret: k8s-sb-server
-        kubernetes_token:
-          from_secret: k8s-token        
+  - name: deploy
+    image: giosg/drone-helm:test-v3
+    pull: always
+    settings:
+      chart: charts/hello-world
+      namespace: default
+      release_name: example
+      values:
+        - imageTag=${DRONE_COMMIT}
+        - changecause=${DRONE_COMMIT}
+      api_server:
+        from_secret: k8s-sb-server
+      kubernetes_token:
+        from_secret: k8s-token
+      set_value_template:
+        - "secret.env.SECRET={{ SECRET_VALUE }}"
+        - "replicas=2"
+    environment:
+      SECRET_VALUE:
+        from_secret: SECRET_VALUE
+
+    when:
+      branch:
+        - master
+
+services:
+  - name: redis
+    image: redis
+    ports:
+      - 6379
